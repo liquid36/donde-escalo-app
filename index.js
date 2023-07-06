@@ -1,5 +1,5 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri = ''
+const uri = '';
 const { scrapWether } = require('./scrap');
 
 const client = new MongoClient(uri,  {
