@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { initFlowbite } from 'flowbite';
 import { getPlaces, getUser, getWether, loginAnonymous } from './services/realm';
+import * as suncalc from 'suncalc';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,10 @@ export class AppComponent implements OnInit {
     this.wether = await  getWether();
 
     this.places.forEach(place => {
+ 
+      const times = suncalc.getTimes(new Date(), place.position.lat, place.position.lng);
+
+
       const wetherDocs = this.wether.filter(w => w.place._id.toString() === place._id.toString());
 
       const maxTemp = Math.max(...wetherDocs.map(d => d.temp));
@@ -45,6 +50,9 @@ export class AppComponent implements OnInit {
       place.cloudHigh = Math.round(cloudHigh / wetherDocs.length);
       place.cloudMid = Math.round(cloudMid / wetherDocs.length);
       place.cloudLow = Math.round(cloudLow / wetherDocs.length);
+
+      place.sunrise = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
+      place.sunset = times.sunset.getHours() + ':' + times.sunset.getMinutes();
 
       let warning = 0;
 
