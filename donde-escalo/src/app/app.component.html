@@ -37,7 +37,8 @@
 </nav>
 
 <ul class="m-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-  <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600" *ngFor="let place of places"> 
+  <li class="w-full px-4 py-2 border-b border-{{ place.warning < 2 ? 'green' : 'red' }}-500 rounded-t-lg dark:border-gray-600" *ngFor="let place of places"> 
+     
 
     <div class="flex justify-between">
       <span class="flex items-center text-xl">
