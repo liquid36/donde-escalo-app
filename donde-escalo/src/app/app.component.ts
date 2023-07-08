@@ -28,6 +28,11 @@ export class AppComponent implements OnInit {
       const maxWind = Math.max(...wetherDocs.map(d => d.windGust));
       
       const maxPrecip = wetherDocs.map(d => d.precip).reduce((acc, current) => acc + current, 0);
+
+      const cloudHigh = wetherDocs.map(d => d.cloudCover).reduce((acc, current) => acc + current.high, 0);
+      const cloudMid = wetherDocs.map(d => d.cloudCover).reduce((acc, current) => acc + current.mid, 0);
+      const cloudLow = wetherDocs.map(d => d.cloudCover).reduce((acc, current) => acc + current.low, 0);
+
       const cloud = wetherDocs.map(d => d.cloudCover).reduce((acc, current) => acc + current.high + current.mid + current.low, 0);
       const cloudMean = cloud / ( wetherDocs.length * 3 );
       
@@ -37,7 +42,19 @@ export class AppComponent implements OnInit {
       place.maxPrecip = maxPrecip.toFixed(2);
       place.cloudMean = Math.round(cloudMean);
 
+      place.cloudHigh = Math.round(cloudHigh / wetherDocs.length);
+      place.cloudMid = Math.round(cloudMid / wetherDocs.length);
+      place.cloudLow = Math.round(cloudLow / wetherDocs.length);
 
+      let warning = 0;
+
+      if (place.maxTemp < 15) warning++;
+      if (place.maxTemp <= 5) warning =+ 2;
+      if (place.maxWind > 50) warning++; 
+      if (place.cloudLow >= 50) warning++; 
+      if (place.maxPrecip >= 10) warning++; 
+
+      place.warning = warning;
     });
 
   }

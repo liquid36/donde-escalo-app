@@ -1,5 +1,5 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri = '';
+const uri = 'mongodb+srv://sam:linuxlomas@m123-rs1.jxomq.mongodb.net/?retryWrites=true&w=majority';
 const { scrapWether } = require('./scrap');
 
 const client = new MongoClient(uri,  {
