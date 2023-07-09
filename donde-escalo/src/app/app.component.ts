@@ -65,5 +65,7 @@ export class AppComponent implements OnInit {
       place.warning = warning;
     });
 
+
+    this.places = this.places.sort((a,b) => a.warning - b.warning);
   }
 }
