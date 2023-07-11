@@ -63,6 +63,14 @@ export class AppComponent implements OnInit {
       if (place.maxPrecip >= 10) warning++; 
 
       place.warning = warning;
+
+      if (place.warning < 2) {
+        place.css = 'bg-green-100';
+      } else if (place.warning < 3) {
+        place.css = 'bg-yellow-100';
+      } else {
+        place.css = 'bg-red-100';
+      }
     });
 
 
