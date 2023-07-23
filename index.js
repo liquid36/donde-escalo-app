@@ -16,6 +16,7 @@ async function run() {
       const db = client.db('test');
       const places = await db.collection('places').find({}).toArray();
       for( const place of places) {
+        console.log(place.name)
         const wether = await scrapWether(place.windguruId);
         
         const minDate = wether[0].date;

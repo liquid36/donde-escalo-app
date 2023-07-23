@@ -19,7 +19,13 @@ module.exports.scrapWether = async function scrapWether (id) {
 
 
     await newPage.goto('http://wap2.windguru.cz/view.php?&sc=' + id + '&m=3&n=&from=search&start=0&full=1');
-
+    
+    newPage.on('console', async (msg) => {
+        const msgArgs = msg.args();
+        for (let i = 0; i < msgArgs.length; ++i) {
+            console.log(await msgArgs[i].jsonValue());
+        }
+    });
     const result = await newPage.evaluate(() => {
 
         function extractColumns(tr) {
@@ -46,22 +52,24 @@ module.exports.scrapWether = async function scrapWether (id) {
             });
             return rs;
         }
-
         const rows = document.querySelectorAll('table tr');
+
+        const isoRow = rows[5].querySelectorAll('td')[0].innerText;
+        const offset = isoRow.includes('isotherm') ? 1 : 0;
+
         const dates = extractColumns(rows[0]);
         const windSpeed = extractColumns(rows[1]);
         const windGust = extractColumns(rows[2]);
         const temp = extractColumns(rows[4]);
-        const isoTerm = extractColumns(rows[5]);
-        const cloudCover = extractCloud(rows[6]);
-        const precip = extractColumns(rows[7]);
-        console.log(temp)
+        // const isoTerm = extractColumns(rows[5]);
+        const cloudCover = extractCloud(rows[5 + offset]);
+        const precip = extractColumns(rows[6 + offset]);
         return {
             dates,
             windSpeed,
             windGust,
             temp,
-            isoTerm,
+            // isoTerm,
             cloudCover,
             precip
         }
@@ -84,7 +92,7 @@ module.exports.scrapWether = async function scrapWether (id) {
             windSpeed: Number(result.windSpeed[i + 1]),
             windGust: Number(result.windGust[i + 1]),
             temp: Number(result.temp[i + 1]),
-            isoTerm: result.isoTerm[i + 1],
+            // isoTerm: result.isoTerm[i + 1],
             cloudCover: result.cloudCover[i + 1],
             precip: isNaN(precip) ? 0 : precip
         })

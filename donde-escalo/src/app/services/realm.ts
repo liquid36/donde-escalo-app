@@ -5,6 +5,14 @@ import { startOfWeek, addDays, endOfWeek, addWeeks, endOfDay } from 'date-fns';
 const app = new Realm.App({ id: "climbing-app-ongai" });
 
 
+export async function loginWithGoogle(response: any) {
+    debugger
+    const credentials = Realm.Credentials.google({ idToken: response.credential });
+    return app
+        .logIn(credentials)
+        .then((user) => alert(`Logged in with id: ${user.id}`));
+}
+
 export async function loginAnonymous() {
     const credentials = Realm.Credentials.anonymous();
     // Authenticate the user
