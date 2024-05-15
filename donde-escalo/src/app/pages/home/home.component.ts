@@ -13,10 +13,12 @@ export class HomeComponent implements OnInit {
   places: any[] = [];
   wether: any[] = [];
 
-  async ngOnInit() { 
-    
-    this.places = await getPlaces();
-    this.wether = await  getWether();
+  dateSelect = ['Hoy', 'Mañana', 'Fin de Semana'];
+  dateSelected = 'Hoy';
+
+
+  async doChange() {
+    this.wether = await  getWether(this.dateSelected);
 
     this.places.forEach(place => {
  
@@ -72,5 +74,12 @@ export class HomeComponent implements OnInit {
 
 
     this.places = this.places.sort((a,b) => a.warning - b.warning);
+  }
+
+  async ngOnInit() { 
+    
+    this.places = await getPlaces();
+    await this.doChange();
+    
   }
 }

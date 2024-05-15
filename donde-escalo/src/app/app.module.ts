@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { HomeComponent } from './pages/home/home.component';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { LoginComponent } from './pages/login/login.component';
     RouterModule,
     AppRoutingModule,
     CommonModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

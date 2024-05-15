@@ -1,5 +1,5 @@
 import * as Realm from "realm-web";
-import { startOfWeek, addDays, endOfWeek, addWeeks, endOfDay } from 'date-fns';
+import { startOfWeek, addDays, endOfWeek, addWeeks, endOfDay, startOfDay } from 'date-fns';
 
 // Add your App ID
 const app = new Realm.App({ id: "climbing-app-ongai" });
@@ -51,18 +51,46 @@ export async function getPlaces() {
     return [];
 }
 
-export async function getWether() {
-    const fechaActual = new Date();
-    const fechaInicioSemana = startOfWeek(fechaActual);
-    const fechaInicioFinSemana = addDays(fechaInicioSemana, 6);
-    const fechaFinFinSemana = endOfDay(addDays(fechaInicioFinSemana, 1));
+function getDateRange(dateSelected: string): { start: Date, end: Date } {
+    switch (dateSelected) {
+        case 'Fin de Semana': {
+            const fechaActual = new Date();
+            const fechaInicioSemana = startOfWeek(fechaActual);
+            const fechaInicioFinSemana = addDays(fechaInicioSemana, 6);
+            const fechaFinFinSemana = endOfDay(addDays(fechaInicioFinSemana, 1));
+            
+            return {start: fechaInicioFinSemana, end : fechaFinFinSemana};
+        }
+        case 'Mañana': {
+            const fechaActual = addDays(new Date(), 1);
+            const start = startOfDay(fechaActual);
+            const end = endOfDay(fechaActual);
+            return {
+                start, end
+            }
+        }
+
+        default:
+        case 'Hoy': {
+            const fechaActual = new Date();
+            const start = startOfDay(fechaActual);
+            const end = endOfDay(fechaActual);
+            return {
+                start, end
+            }
+        }
+    }
+}
+
+export async function getWether(dateSelected: string) {
+    const { start, end } = getDateRange(dateSelected);
 
     const wetherCollection = getWetherCollection();
     if (wetherCollection) {
         const wetherDocs = await wetherCollection.find({
             date: {
-                $gte: fechaInicioFinSemana,
-                $lte: fechaFinFinSemana
+                $gte: start,
+                $lte: end
             }
         });
         return wetherDocs;

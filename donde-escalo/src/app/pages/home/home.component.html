@@ -5,6 +5,14 @@
   ¿Dónde se escala el próximo finde?
 </div> -->
 
+
+<p>
+  <select name="miselect" [(ngModel)]="dateSelected" (change)="doChange()" class="w-full">
+    <option [value]="item" *ngFor="let item of dateSelect">{{item}}</option>
+  </select>
+  </p>
+
+
   
   <ul class="m-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
     <li class="w-full px-4 py-2 border-b-2 rounded-t-lg dark:border-gray-600 {{place.css}}" *ngFor="let place of places"> 
