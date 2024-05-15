@@ -14,6 +14,8 @@ export class AuthService {
 
     constructor() {
         this.app = new Realm.App({ id: "climbing-app-ongai" });
+        (window as any).app = this.app;
+
         setTimeout(() => {
             this._user.next(this.getUser());
         }, 1);
@@ -31,8 +33,9 @@ export class AuthService {
 
     async loginAnonymous() {
         const credentials = Realm.Credentials.anonymous();
-        const user = await this.app.logIn(credentials);
-        this._user.next(user);
+        const user = await this.app.logIn(credentials); 
+        console.assert(user.id === this.app.currentUser?.id);
+        this._user.next(user);  
         return user;
     }
 

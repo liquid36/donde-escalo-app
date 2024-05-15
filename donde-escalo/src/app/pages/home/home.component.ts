@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { initFlowbite } from 'flowbite';
 import { getPlaces, getUser, getWether, loginAnonymous } from '../../services/realm';
 import * as suncalc from 'suncalc';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +17,10 @@ export class HomeComponent implements OnInit {
   dateSelect = ['Hoy', 'Mañana', 'Fin de Semana'];
   dateSelected = 'Hoy';
 
+  constructor(private auth: AuthService) {}
 
   async doChange() {
-    this.wether = await  getWether(this.dateSelected);
+    this.wether = await getWether(this.auth.app, this.dateSelected);
 
     this.places.forEach(place => {
  
@@ -77,9 +79,13 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit() { 
-    
-    this.places = await getPlaces();
-    await this.doChange();
+    this.auth.user$.subscribe(async (user) => {
+      console.log('SUBSCRIBE', user)
+      if (user) {
+        this.places = await getPlaces(this.auth.app);
+        await this.doChange();
+      }
+    })
     
   }
 }

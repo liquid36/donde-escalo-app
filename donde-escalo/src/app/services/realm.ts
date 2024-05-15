@@ -25,7 +25,7 @@ export function getUser() {
 }
 
 
-export function getWetherCollection() {
+export function getWetherCollection(app: any) {
     const mongo = app.currentUser?.mongoClient('mongodb-atlas');
     if (mongo) {
         const collection = mongo.db('test').collection('wether');
@@ -34,7 +34,8 @@ export function getWetherCollection() {
     return null;
 }
 
-export function getPlacesCollection() {
+export function getPlacesCollection(app: any) { 
+    console.log('getPlacesCollection', app.currentUser);
     const mongo = app.currentUser?.mongoClient('mongodb-atlas');
     if (mongo) {
         const collection = mongo.db('test').collection('places');
@@ -43,8 +44,8 @@ export function getPlacesCollection() {
     return null;
 }
 
-export async function getPlaces() {
-    const placesCollection = getPlacesCollection();
+export async function getPlaces(app: any) {
+    const placesCollection = getPlacesCollection(app);
     if (placesCollection) {
         return await placesCollection.find({});
     }
@@ -82,10 +83,10 @@ function getDateRange(dateSelected: string): { start: Date, end: Date } {
     }
 }
 
-export async function getWether(dateSelected: string) {
+export async function getWether(app: any, dateSelected: string) {
     const { start, end } = getDateRange(dateSelected);
 
-    const wetherCollection = getWetherCollection();
+    const wetherCollection = getWetherCollection(app);
     if (wetherCollection) {
         const wetherDocs = await wetherCollection.find({
             date: {
